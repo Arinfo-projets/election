@@ -1,0 +1,38 @@
+<nav class="navbar shadow navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">ELECTION</a>
+    <button class="navbar-toggler flex-items-end" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav flex-sm-fill">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{path('app_home')}}">Accueil</a>
+        </li>
+      </ul>
+      <div class="dropdown">
+        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {% if app.user %}
+          {{ app.user.fullName }}
+          {% else %}
+          Non connecter
+          {% endif %}
+        </button>
+        <ul class="dropdown-menu">
+          {% if app.user %}
+            {% if(is_granted('ROLE_ADMIN')) %}
+              <li><a class="dropdown-item" href="{{ path('app_election_new') }}">Nouvel election</a></li>
+              <li><a class="dropdown-item" href="{{path('app_register')}}">Nouvel utilisateur</a></li>
+            {% endif %}
+            <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
+            {% else %}
+            <li><a class="dropdown-item" href="/login">Se connecter</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</nav>

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Election{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="mb-3 fs-3">{{election.title}}</h1>
+    <div class="d-flex flex-wrap">
+        <div class="card bg-success text-white fw-bold" style="width: fit-content; border-radius: 0;">
+            <div class="card-body">Nombre de votant : {{ election.voters | length }}</div>
+        </div>
+        <div class="card border-start-0 bg-warning text-white fw-bold" style="width: fit-content; border-radius: 0;">
+            <div class="card-body">Nombre de vote : {{ election.votes | length }}</div>
+        </div>
+    </div>
+    <div class="mt-3">
+        {% if hasAlreadyVoted and election.isOpen %}
+        <em>Votre vote a été approuvé</em>
+        {% else %}
+        <h2 class="fs-4 border-top border-dark border-bottom py-3"> Candidats </h2>
+        {% if election.isOpen %}
+        {% if not is_granted('ROLE_ADMIN') %}
+        <div class="d-flex mt-2">
+            {% for candidate in election.candidates %}
+            <form method="post" action="" class="me-3">
+                <input type="hidden" name="candidate" value="{{candidate.id}}">
+                <input type="hidden" name="election" value="{{election.id}}">
+                <input type="hidden" name="user" value="{{app.user.id}}">
+                <button type="submit" class="btn btn-lg btn-outline-primary">{{ candidate.user.fullName }}</button>
+            </form>
+            {% endfor %}
+            <form method="post" action="" class="me-3">
+                <input type="hidden" name="candidate" value="">
+                <input type="hidden" name="election" value="{{election.id}}">
+                <input type="hidden" name="user" value="{{app.user.id}}">
+                <button type="submit" class="btn btn-lg btn-outline-danger">Null</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="d-flex mt-2">
+            {% for candidate in election.candidates %}
+            <button disabled class="btn btn-lg btn-outline-primary me-3">{{ candidate.user.fullName }}</button>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <p class="fw-bold">Résultat</p>
+        {% for candidate in election.candidates %}
+        <button disabled class="btn btn-lg btn-outline-primary me-3">{{ candidate.user.fullName }} {{countVote(candidate.user.id, election.votes)}}</button>
+        {% endfor %}
+        <button disabled class="btn btn-lg btn-outline-danger">Null {{ blackVote(election.votes) }} </button>
+
+        {% endif %}
+
+        {% endif %}
+        {% if election.isOpen %}
+        {% if is_granted('ROLE_ADMIN') and election.user.id == app.user.id %}
+        <div class="mt-5">
+            {% if election.votes | length == election.voters | length %}
+            <form method="POST" action="?is_open=false">
+                <button type="submit" class="btn btn-info">Publier le résultat</button>
+            </form>
+            {% else %}
+            <button disabled onclick="alert('Tous le monde n\'a pas encore votés ')" class="btn btn-info">Publier le
+                résultat</button>
+            {% endif %}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

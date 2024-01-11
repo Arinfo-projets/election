@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 mb-5">
+                <p class="fs-2">
+                    Organizez vos elections d'élèves, AG et biens d'autres en toute sécurité avec
+                   <span class="text-primary fw-bold">{{app.request.server.get('APP_NAME')}}</span>
+                </p>
+                <p class="fw-bolder">Comment ça marche ?</p>
+                <ul style="list-style: circle; line-height: 1.50em;">
+                    <li>Connectez-vous à votre compte préalablement créé par un organisme.</li>
+                    <li>Participez aux élections depuis votre profil.</li>
+                    <li>Lorsque la totalité des participants a voté, vous y trouverez le nom de la personne élue.</li>
+                </ul>
+                <div class="d-flex">
+                    <a href="{{path('app_login')}}" class="btn btn-primary">Je me connecte</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="w-100" style="height: 300px;">
+                    <img style="object-fit: cover;" width="100%" height="100%" src="https://www.francetvinfo.fr/pictures/m8HOpzroLxQ2TLiZ_Wfp-JOYlJ8/1500x843/2022/04/16/phpOfCovi.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

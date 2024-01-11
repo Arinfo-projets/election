@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Election{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="card m-auto" style="width: 600px; max-width: 100%;">
+        <div class="card-header bg-dark text-white">
+            <h1 class="fs-3">Nouvelle election</h1>
+        </div>
+        <div class="card-body">
+            {{ include('election/_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

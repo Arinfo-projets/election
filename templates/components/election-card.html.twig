@@ -1,0 +1,20 @@
+<div class="card w-100">
+    <div class="card-header bg-dark text-white">
+        {{election.title}}
+    </div>
+    <ul class="list-group list-group-flush">
+        {% for candidate in election.candidates %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                {{candidate.user.fullName}}
+            </div>
+            {% if not election.isOpen %}
+                <span class="badge bg-primary rounded-pill fs-6"> {{countVote(candidate.user.id, election.votes)}} </span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="card-footer bg-white">
+        <a href="{{ path('app_election_show', {'id': election.id} ) }}" class="btn btn-dark">Voir l'élection</a>
+    </div>
+</div>

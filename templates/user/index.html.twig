@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+<div class="container my-5 d-flex flex-column  align-items-center">
+    {% if is_granted('ROLE_ADMIN') %}
+    <h1 class="mb-5 fs-3">Gérer vos elections</h1>
+    {% else %}
+    <h1 class="mb-5 fs-3">Vous êtes invité à voter à ces élections</h1>
+    {% endif %}
+    {% for election in elections %}
+    <div style="width: 600px; max-width: 100%">
+        {{ include('components/election-card.html.twig', {'election': election} ) }}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

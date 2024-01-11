@@ -1,0 +1,27 @@
+parameters:
+    hash: $2y$13$ZQAodQtpLqvGmnkkK7JwmeRCkgqdv.PIKQ7z.23Rv5ZTMk7ElEXzi
+
+#password
+
+App\Entity\User:
+  user1:
+    firstName: 'Yoann'
+    lastName: 'Piard'
+    roles: ["ROLE_SUPERADMIN"]
+    email: 'yoann.piard@email.fr'
+    password: <{hash}>
+    isVerified: 1
+  user2:
+    firstName: 'Nicolas'
+    lastName: 'Gicquel'
+    roles: ["ROLE_ADMIN"]
+    email: 'nicolas.gicquel@email.fr'
+    password: <{hash}>
+    isVerified: 1
+  user3:
+    firstName: 'Sol'
+    lastName: 'Choi'
+    roles: ["ROLE_USER"]
+    email: 'sol.choi@email.fr'
+    password: <{hash}>
+    isVerified: 1
