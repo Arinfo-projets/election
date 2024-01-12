@@ -27,6 +27,7 @@ class ElectionRepository extends ServiceEntityRepository
             ->leftJoin('e.voters', 'v')
             ->where(':userId = v.user')
             ->setParameter('userId', $userId)
+            ->orderBy('e.createdAt', 'desc')
             ->getQuery()
             ->getResult();
     }
@@ -36,6 +37,16 @@ class ElectionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('e')
             ->andWhere('e.user = :userId')
             ->setParameter('userId', $userId)
+            ->orderBy('e.createdAt', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getOldElection()
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.isOpen = true')
+            ->andWhere('e.untilAt <= CURRENT_DATE()')
             ->getQuery()
             ->getResult();
     }

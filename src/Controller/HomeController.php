@@ -13,10 +13,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class HomeController extends AbstractController
 {
 
-    public function __construct(private ElectionRepository $electionRepository, private VoterRepository $voterRepository)
-    {
-    }
-
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {

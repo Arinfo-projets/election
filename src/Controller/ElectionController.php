@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Constraints\Date;
 
 #[Route('/election')]
 class ElectionController extends AbstractController
@@ -29,8 +30,7 @@ class ElectionController extends AbstractController
         private ElectionRepository $electionRepository,
         private CandidateRepository $candidateRepository,
         private ElectionService $electionService
-        )
-    {
+    ) {
     }
 
     #[Route('/', name: 'app_election_index', methods: ['GET'])]
@@ -51,8 +51,8 @@ class ElectionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $candidates = $request->get('election')['candidates'] ?? [];
-            $voters = $request->get('election')['voters'] ?? [];
 
             foreach ($candidates as $candidate) {
                 $user = $this->userRepository->find($candidate);
@@ -66,17 +66,21 @@ class ElectionController extends AbstractController
                 }
             }
 
-            foreach ($voters as $voter) {
-                $user = $this->userRepository->find($voter);
+            $users = $this->userRepository->getUsersByRole('["ROLE_USER"]');
+
+            foreach ($users as $user) {
                 if ($user) {
                     $voterEntity = new Voter();
                     $voterEntity->setUser($user);
-                    $voterEntity->setElection($election);
                     $election->addVoter($voterEntity);
-                    $election->setUser($this->getUser());
+                    $voterEntity->setElection($election);
                     $entityManager->persist($voterEntity);
                 }
             }
+
+            $election->setUser($this->getUser());
+            $election->setCreatedAt(new \DateTimeImmutable);
+            $election->setUntilAt(new \DateTimeImmutable($request->get('election')['untilAt']));
 
             $entityManager->persist($election);
             $entityManager->flush();
@@ -123,15 +127,14 @@ class ElectionController extends AbstractController
             return $this->redirectToRoute('app_election_show', ['id' => $election->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        if($request->get('is_open')){
-            if($election->getUser()->getId() === $this->getUser()->getId()){
+        if ($request->get('is_open')) {
+            if ($election->getUser()->getId() === $this->getUser()->getId()) {
                 $election->setIsOpen(false);
                 $entityManager->persist($election);
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Vote fermé');
                 return $this->redirectToRoute('app_election_show', ['id' => $election->getId()], Response::HTTP_SEE_OTHER);
-
             }
         }
 
@@ -148,9 +151,9 @@ class ElectionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $entityManager->persist($election);
 
-            return $this->redirectToRoute('app_election_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('election/edit.html.twig', [
@@ -159,14 +162,13 @@ class ElectionController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_election_delete', methods: ['POST'])]
+    #[Route('{id}/delete', name: 'app_election_delete', methods: ['POST'])]
     public function delete(Request $request, Election $election, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $election->getId(), $request->request->get('_token'))) {
             $entityManager->remove($election);
             $entityManager->flush();
         }
-
-        return $this->redirectToRoute('app_election_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -18,8 +18,10 @@ class ElectionExtenssion extends AbstractExtension
     public function getFunctions(): array
     {
         return [
+
             new TwigFunction('countVote', [$this->electionService, 'countVote']),
             new TwigFunction('blackVote', [$this->electionService, 'blackVote']),
+
         ];
     }
 }

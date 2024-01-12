@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Vote;
 use App\Form\UserType;
 use App\Repository\ElectionRepository;
 use App\Repository\UserRepository;
 use App\Repository\VoterRepository;
+use App\Service\ElectionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,8 +24,8 @@ class UserController extends AbstractController
     {
     }
 
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    #[Route('/', name: 'app_user_index', methods: ['GET', 'POST'])]
+    public function index(UserRepository $userRepository, ElectionService $electionService): Response
     {
 
         $elections = [];
@@ -32,9 +34,11 @@ class UserController extends AbstractController
 
         if (!$this->isGranted('ROLE_ADMIN')) {
             $elections = $this->electionRepository->findAllForUser($userId);
-        }else{
+        } else {
             $elections =  $this->electionRepository->findAllForAdmin($userId);
         }
+
+        $electionService->addMissingVotes();
 
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),

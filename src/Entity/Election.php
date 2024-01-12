@@ -18,13 +18,13 @@ class Election
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\OneToMany(mappedBy: 'election', targetEntity: Candidate::class)]
+    #[ORM\OneToMany(mappedBy: 'election', targetEntity: Candidate::class, cascade: ['remove'])]
     private Collection $candidates;
 
-    #[ORM\OneToMany(mappedBy: 'election', targetEntity: Vote::class)]
+    #[ORM\OneToMany(mappedBy: 'election', targetEntity: Vote::class, cascade: ['remove'])]
     private Collection $votes;
 
-    #[ORM\OneToMany(mappedBy: 'election', targetEntity: Voter::class)]
+    #[ORM\OneToMany(mappedBy: 'election', targetEntity: Voter::class, cascade: ['remove'])]
     private Collection $voters;
 
     #[ORM\ManyToOne(inversedBy: 'elections')]
@@ -32,6 +32,12 @@ class Election
 
     #[ORM\Column]
     private ?bool $isOpen = true;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $untilAt = null;
 
     public function __construct()
     {
@@ -167,6 +173,30 @@ class Election
     public function setIsOpen(?bool $isOpen): static
     {
         $this->isOpen = $isOpen;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUntilAt(): ?\DateTimeImmutable
+    {
+        return $this->untilAt;
+    }
+
+    public function setUntilAt(\DateTimeImmutable $untilAt): static
+    {
+        $this->untilAt = $untilAt;
 
         return $this;
     }

@@ -1,6 +1,7 @@
 <div class="card w-100">
     <div class="card-header bg-dark text-white">
-        {{election.title}}
+        <span class="d-block fs-5">{{election.title}}</span>
+        <span class="d-block"> Jusqu'à : {{election.untilAt | date('d M Y h:i') }} </span>
     </div>
     <ul class="list-group list-group-flush">
         {% for candidate in election.candidates %}
@@ -9,12 +10,15 @@
                 {{candidate.user.fullName}}
             </div>
             {% if not election.isOpen %}
-                <span class="badge bg-primary rounded-pill fs-6"> {{countVote(candidate.user.id, election.votes)}} </span>
+            <span class="badge bg-primary rounded-pill fs-6"> {{countVote(candidate.user.id, election.votes)}} </span>
             {% endif %}
         </li>
         {% endfor %}
     </ul>
-    <div class="card-footer bg-white">
-        <a href="{{ path('app_election_show', {'id': election.id} ) }}" class="btn btn-dark">Voir l'élection</a>
+    <div class="card-footer bg-white d-flex">
+        <a href="{{ path('app_election_show', {'id': election.id} ) }}" class="btn btn-dark me-3">Voir l'élection</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            {{ include('election/_delete_form.html.twig') }}
+        {% endif %}
     </div>
 </div>
