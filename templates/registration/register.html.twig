@@ -19,12 +19,15 @@
             {{ form_row(registrationForm.email) }}
             {{ form_row(registrationForm.firstName) }}
             {{ form_row(registrationForm.lastName) }}
-            {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-            }) }}
+
             {{ form_row(registrationForm.agreeTerms, {
-                'label': "J'acccepte les conditions d'utilisations"
+            'label': "J'acccepte les conditions d'utilisations"
             }) }}
+
+            {{ form_row(registrationForm.roles, {
+                'required': true,
+            }) }}
+
 
             <button type="submit" class="btn btn-dark">Register</button>
             {{ form_end(registrationForm) }}

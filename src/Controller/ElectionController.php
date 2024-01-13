@@ -166,6 +166,9 @@ class ElectionController extends AbstractController
     public function delete(Request $request, Election $election, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $election->getId(), $request->request->get('_token'))) {
+
+            $this->addFlash('success', 'Election supprimé');
+
             $entityManager->remove($election);
             $entityManager->flush();
         }
