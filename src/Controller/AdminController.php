@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
+use App\Form\PasswordFormType;
+use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -59,17 +61,18 @@ class AdminController extends AbstractController
             ];
         }
 
-        $form = $this->createForm(RegistrationFormType::class, $user, [
+        $form = $this->createForm(UserType::class, $user, [
             'roles_choices' => $roles,
+            'default_role' => $user->getRoles()[0]
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user->setRoles($form->get('roles')->getData());
+            $user->setRoles([$form->get('roles')->getData()]);
 
-            $entityManager->persist($user);
+            $entityManager->flush();
 
             $this->addFlash('success', 'Utilisateur modifier');
 
@@ -77,8 +80,12 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_admin_users');
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user
         ]);
     }
+
+
+
 }

@@ -22,6 +22,7 @@ class ElectionType extends AbstractType
                 'label' => "Titre de mon election"
             ])
             ->add('candidates', EntityType::class, [
+                'label' => 'Candidats',
                 'class' => User::class,
                 'mapped' => false,
                 'choice_label' => 'fullName',
@@ -34,6 +35,7 @@ class ElectionType extends AbstractType
                 },
             ])
             ->add('untilAt', DateType::class, [
+                'label' => "Date limite de l'election",
                 'widget' => 'single_text',
                 'html5' => true,
                 'data' => new \DateTime()

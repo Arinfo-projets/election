@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Vote;
+use App\Form\PasswordFormType;
 use App\Form\UserType;
 use App\Repository\ElectionRepository;
 use App\Repository\UserRepository;
@@ -13,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -103,5 +105,35 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/edit-password', name: 'app_admin_user_edit_password', methods: ['GET', 'POST'])]
+    public function editPassword(Request $request,UserPasswordHasherInterface $userPasswordHasher, User $user, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(PasswordFormType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur modifier');
+
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('user/edit_password.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user
+        ]);
     }
 }
