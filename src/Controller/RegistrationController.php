@@ -67,12 +67,12 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            // $role = $this->isGranted('ROLE_SUPERADMIN') ? [$form->get('roles')->getData()] : ["ROLE_USER"];
-
-            $user->setRoles($form->get('roles')->getData());
+            $user->setRoles([$form->get('roles')->getData()]);
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur ajouté');
 
             return $this->redirectToRoute('app_home');
         }

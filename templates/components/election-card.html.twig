@@ -17,8 +17,5 @@
     </ul>
     <div class="card-footer bg-white d-flex">
         <a href="{{ path('app_election_show', {'id': election.id} ) }}" class="btn btn-dark me-3">Voir l'élection</a>
-        {% if is_granted('ROLE_ADMIN') %}
-            {{ include('election/_delete_form.html.twig') }}
-        {% endif %}
     </div>
 </div>

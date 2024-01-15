@@ -1,3 +1,5 @@
+#php bin/console hautelook:fixtures:load
+
 parameters:
     hash: $2y$13$ZQAodQtpLqvGmnkkK7JwmeRCkgqdv.PIKQ7z.23Rv5ZTMk7ElEXzi
 
@@ -12,16 +14,44 @@ App\Entity\User:
     password: <{hash}>
     isVerified: 1
   user2:
-    firstName: 'Nicolas'
-    lastName: 'Gicquel'
+    firstName: 'Luc'
+    lastName: 'Machin'
     roles: ["ROLE_ADMIN"]
-    email: 'nicolas.gicquel@email.fr'
+    email: 'luc.machin@email.fr'
     password: <{hash}>
     isVerified: 1
   user3:
-    firstName: 'Sol'
-    lastName: 'Choi'
+    firstName: 'Marie'
+    lastName: 'Potin'
     roles: ["ROLE_USER"]
-    email: 'sol.choi@email.fr'
+    email: 'mp@email.fr'
+    password: <{hash}>
+    isVerified: 1
+  user4:
+    firstName: 'Tintin'
+    lastName: 'Michou'
+    roles: ["ROLE_USER"]
+    email: 'tintin@email.fr'
+    password: <{hash}>
+    isVerified: 1
+  user5:
+    firstName: 'Robert'
+    lastName: 'Roberta'
+    roles: ["ROLE_USER"]
+    email: 'robert@email.fr'
+    password: <{hash}>
+    isVerified: 1
+  user6:
+    firstName: 'Emma'
+    lastName: 'Lily'
+    roles: ["ROLE_USER"]
+    email: 'e.lily@email.fr'
+    password: <{hash}>
+    isVerified: 1
+  user7:
+    firstName: 'Make'
+    lastName: 'Brand'
+    roles: ["ROLE_USER"]
+    email: 'myowneemail@email.fr'
     password: <{hash}>
     isVerified: 1

@@ -57,23 +57,28 @@
         {% endif %}
 
         {% if election.isOpen %}
-            {% if is_granted('ROLE_ADMIN') and election.user.id == app.user.id %}
-                <div class="mt-5">
-                    {% if election.votes | length == election.voters | length %}
-                    <form method="POST" action="?is_open=false">
-                        <button type="submit" class="btn btn-info">Publier le résultat</button>
-                    </form>
-                    {% else %}
-                    <button disabled onclick="alert('Tous le monde n\'a pas encore votés ')" class="btn btn-info">Publier le
-                        résultat</button>
-                    {% endif %}
-                </div>
-            {% endif %}
+        {% if is_granted('ROLE_ADMIN') and election.user.id == app.user.id %}
+        <div class="mt-5">
+            {% if election.votes | length == election.voters | length %}
+            <form method="POST" action="?is_open=false">
+                <button type="submit" class="btn btn-info">Publier le résultat</button>
+            </form>
             {% else %}
-            <div class="mt-5">
-                <a href="{{path('app_election_new')}}" class="btn btn-success">Ajouter un autre tour</a>
-            </div>
+            <button disabled onclick="alert('Tous le monde n\'a pas encore votés ')" class="btn btn-info">Publier le
+                résultat</button>
+            {% endif %}
+        </div>
         {% endif %}
+        {% else %}
+        <div class="mt-5">
+            <a href="{{path('app_election_new')}}" class="btn btn-success">Ajouter un autre tour</a>
+        </div>
+        {% endif %}
+        <div class="mt-3">
+            {% if is_granted('ROLE_ADMIN') %}
+                {{ include('election/_delete_form.html.twig') }}
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

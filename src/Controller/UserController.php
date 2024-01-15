@@ -97,6 +97,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
@@ -110,6 +111,11 @@ class UserController extends AbstractController
     #[Route('/{id}/edit-password', name: 'app_admin_user_edit_password', methods: ['GET', 'POST'])]
     public function editPassword(Request $request,UserPasswordHasherInterface $userPasswordHasher, User $user, EntityManagerInterface $entityManager): Response
     {
+
+        if($user->getId() != $this->getUser()->getId()){
+           return $this->redirectToRoute('app_home');
+        }
+
         $form = $this->createForm(PasswordFormType::class, $user);
 
         $form->handleRequest($request);

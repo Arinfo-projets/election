@@ -21,7 +21,7 @@ class Candidate
     #[ORM\ManyToOne(inversedBy: 'candidates')]
     private ?Election $election = null;
 
-    #[ORM\OneToMany(mappedBy: 'condidate', targetEntity: Vote::class)]
+    #[ORM\OneToMany(mappedBy: 'condidate', targetEntity: Vote::class, cascade: ['remove'] )]
     private Collection $votes;
 
     public function __construct()
@@ -70,21 +70,21 @@ class Candidate
     {
         if (!$this->votes->contains($vote)) {
             $this->votes->add($vote);
-            $vote->setCondidate($this);
+            $vote->setCandidate($this); // Corrected method name
         }
 
         return $this;
     }
 
     public function removeVote(Vote $vote): static
-    {
-        if ($this->votes->removeElement($vote)) {
-            // set the owning side to null (unless already changed)
-            if ($vote->getCondidate() === $this) {
-                $vote->setCondidate(null);
-            }
+{
+    if ($this->votes->removeElement($vote)) {
+        // set the owning side to null (unless already changed)
+        if ($vote->getCandidate() === $this) { // Corrected method name
+            $vote->setCandidate(null); // Corrected method name
         }
-
-        return $this;
     }
+
+    return $this;
+}
 }

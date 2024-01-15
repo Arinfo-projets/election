@@ -10,9 +10,11 @@
         </div>
         <div class="card-body">
             {{ include('user/_form.html.twig', {'button_label': 'Modifier'}) }}
+            <div class="mt-3">
+                {{ include('user/_delete_form.html.twig') }}
+            </div>
         </div>
     </div>
 </div>
-{{ include('user/_delete_form.html.twig') }}
 
 {% endblock %}
