@@ -37,7 +37,11 @@ class UserController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN')) {
             $elections = $this->electionRepository->findAllForUser($userId);
         } else {
-            $elections =  $this->electionRepository->findAllForAdmin($userId);
+            if($this->isGranted('ROLE_SUPERADMIN')){
+                $elections = $this->electionRepository->findBy([], ['createdAt' => 'desc']);
+            }else{
+                $elections =  $this->electionRepository->findAllForAdmin($userId);
+            }
         }
 
         $electionService->addMissingVotes();
